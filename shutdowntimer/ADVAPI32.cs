@@ -7,6 +7,11 @@ namespace Win32API
     static class ADVAPI32
     {
         /// <summary>
+        /// advapi32.dllのファイル名
+        /// </summary>
+        const string fileName = "advapi32.dll";
+
+        /// <summary>
         /// 指定したアクセストークン内の特権を有効または無効にします。TOKEN_ADJUST_PRIVILEGES アクセス権が必要です。
         /// </summary>
         /// <param name="TokenHandle">変更したい特権を保持するアクセストークンを指定します。このハンドルは、トークンに対する TOKEN_ADJUST_PRIVILEGES アクセス権を備えていなければなりません。PreviousState パラメータが NULL ではない場合、このハンドルは TOKEN_QUERY アクセス権も必要です。</param>
@@ -26,11 +31,6 @@ namespace Win32API
         /// </returns>
         [System.Runtime.InteropServices.DllImport(fileName, SetLastError = true)]
         public static extern bool AdjustTokenPrivileges(IntPtr TokenHandle, bool DisableAllPrivileges, ref TOKEN_PRIVILEGES NewState, int BufferLength, IntPtr PreviousState, IntPtr ReturnLength);
-
-        /// <summary>
-        /// advapi32.dllのファイル名
-        /// </summary>
-        const string fileName = "advapi32.dll";
 
         /// <summary>
         /// 指定されたシステムで使われているローカル一意識別子（LUID）を取得し、指定された特権名をローカルで表現します。

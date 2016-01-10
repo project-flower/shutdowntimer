@@ -4,15 +4,12 @@ namespace shutdowntimer
 {
     public partial class FormNotify : Form
     {
-        // ローカル フィールド
-        #region LocalFields
-
         int remain = 10;
-        
-        #endregion
 
-        // デザイナ メソッド
-        #region DesignerMethods
+        void setNotifyMessage()
+        {
+            labelNotify.Text = string.Format("This Operating System will be shutdown at {0} seconds later.", remain);
+        }
 
         public FormNotify()
         {
@@ -41,17 +38,5 @@ namespace shutdowntimer
 
             setNotifyMessage();
         }
-
-        #endregion
-
-        // ローカル メソッド
-        #region LocalMethods
-
-        void setNotifyMessage()
-        {
-            labelNotify.Text = string.Format("This Operating System will be shutdown at {0} seconds later.", remain);
-        }
-
-        #endregion
     }
 }

@@ -5,6 +5,10 @@ namespace Win32API
 {
     static class Kernel32
     {
+        /// <summary>
+        /// kernel32.dllのファイル名
+        /// </summary>
+        const string fileName = "kernel32.dll";
 
         /// <summary>
         /// Closes an open object handle.
@@ -17,11 +21,6 @@ namespace Win32API
         /// </returns>
         [DllImport(fileName, SetLastError = true)]
         public static extern bool CloseHandle(IntPtr hObject);
-
-        /// <summary>
-        /// kernel32.dllのファイル名
-        /// </summary>
-        const string fileName = "kernel32.dll";
 
         /// <summary>
         /// 現在のプロセスに対応する疑似ハンドルを取得します。

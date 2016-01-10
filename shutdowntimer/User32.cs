@@ -6,6 +6,11 @@ namespace Win32API
     static class User32
     {
         /// <summary>
+        /// user32.dllのファイル名
+        /// </summary>
+        const string fileName = "user32.dll";
+
+        /// <summary>
         /// Logs off the interactive user, shuts down the system, or shuts down and restarts the system. It sends the WM_QUERYENDSESSION message to all applications to determine if they can be terminated.
         /// </summary>
         /// <param name="uFlags">The shutdown type. This parameter must include one of the following values.</param>
@@ -19,10 +24,5 @@ namespace Win32API
         /// </returns>
         [DllImport(fileName, SetLastError = true)]
         public static extern bool ExitWindowsEx(EWX uFlags, int dwReason);
-
-        /// <summary>
-        /// user32.dllのファイル名
-        /// </summary>
-        const string fileName = "user32.dll";
     }
 }

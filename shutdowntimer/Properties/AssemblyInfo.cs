@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Project Flower")]
 [assembly: AssemblyProduct("shutdowntimer")]
-[assembly: AssemblyCopyright("Copyright © Project Flower 2015")]
+[assembly: AssemblyCopyright("Copyright © Project Flower 2015-2016")]
 [assembly: AssemblyTrademark("Project Flower")]
 [assembly: AssemblyCulture("")]
 
