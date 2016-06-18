@@ -68,6 +68,7 @@ namespace shutdowntimer
             timer.Stop();
             waitfor = !waitfor;
             dateTimePicker.Enabled = !waitfor;
+            comboBoxShutdownSwitch.Enabled = !waitfor;
 
             if (waitfor)
             {
