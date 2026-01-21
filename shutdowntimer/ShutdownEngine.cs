@@ -1,7 +1,5 @@
 ﻿using System;
-using Win32API;
-using Win32API.WinNT;
-using Win32API.WinUser;
+using NativeMethods;
 
 namespace shutdowntimer
 {
@@ -60,12 +58,12 @@ namespace shutdowntimer
         {
             IntPtr processhandle = Kernel32.GetCurrentProcess();
             IntPtr tokenHandle;
-            ADVAPI32.OpenProcessToken(processhandle, (TOKEN.ADJUST_PRIVILEGES | TOKEN.QUERY), out tokenHandle);
+            AdvApi32.OpenProcessToken(processhandle, (TOKEN.ADJUST_PRIVILEGES | TOKEN.QUERY), out tokenHandle);
             var newState = new TOKEN_PRIVILEGES();
             newState.Privileges.Attributes = SE.PRIVILEGE_ENABLED;
             newState.PrivilegeCount = 1;
-            ADVAPI32.LookupPrivilegeValue(null, SE.SHUTDOWN_NAME, out newState.Privileges.Luid);
-            ADVAPI32.AdjustTokenPrivileges(tokenHandle, false, ref newState, 0, IntPtr.Zero, IntPtr.Zero);
+            AdvApi32.LookupPrivilegeValue(null, SE.SHUTDOWN_NAME, out newState.Privileges.Luid);
+            AdvApi32.AdjustTokenPrivileges(tokenHandle, false, ref newState, 0, IntPtr.Zero, IntPtr.Zero);
             Kernel32.CloseHandle(tokenHandle);
         }
     }

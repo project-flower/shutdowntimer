@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Win32API.WinNT;
 
-namespace Win32API
+namespace NativeMethods
 {
-    static class ADVAPI32
+    public static partial class AdvApi32
     {
-        /// <summary>
-        /// advapi32.dllのファイル名
-        /// </summary>
-        const string fileName = "advapi32.dll";
-
         /// <summary>
         /// 指定したアクセストークン内の特権を有効または無効にします。TOKEN_ADJUST_PRIVILEGES アクセス権が必要です。
         /// </summary>
@@ -29,33 +23,7 @@ namespace Win32API
         /// 関数が成功すると、0 以外の値が返ります。
         /// 関数が失敗すると、0 が返ります。拡張エラー情報を取得するには、GetLastError関数を使います。
         /// </returns>
-        [System.Runtime.InteropServices.DllImport(fileName, SetLastError = true)]
+        [DllImport(AssemblyName, SetLastError = true)]
         public static extern bool AdjustTokenPrivileges(IntPtr TokenHandle, bool DisableAllPrivileges, ref TOKEN_PRIVILEGES NewState, int BufferLength, IntPtr PreviousState, IntPtr ReturnLength);
-
-        /// <summary>
-        /// 指定されたシステムで使われているローカル一意識別子（LUID）を取得し、指定された特権名をローカルで表現します。
-        /// </summary>
-        /// <param name="lpSystemName">特権名の検索に使うシステムの名前を指定する、NULL で終わる文字列へのポインタを指定します。NULL 文字列が指定された場合、この関数は特権名をローカルシステムで検索します。</param>
-        /// <param name="lpName">WINNT.H ヘッダーファイル内で定義されている特権名を表す、NULL で終わる文字列を受け取るバッファへのポインタを指定します。たとえば、このパラメータに SE_SECURITY_NAME 定数や、それに対応する "SeSecurityPrivilege" 文字列を指定できます。</param>
-        /// <param name="lpLuid">lpSystemName パラメータによって指定された、特権が既知となっているシステムを表す LUID を受け取る変数へのポインタを指定します。</param>
-        /// <returns>
-        /// 関数が成功すると、0 以外の値が返ります。
-        /// 関数が失敗すると、0 が返ります。拡張エラー情報を取得するには、GetLastError関数を使います。
-        /// </returns>
-        [DllImport(fileName, SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, out long lpLuid);
-
-        /// <summary>
-        /// プロセスに関連付けられているアクセストークンを開きます。
-        /// </summary>
-        /// <param name="ProcessHandle">開くアクセストークンを保持するプロセスを識別します。</param>
-        /// <param name="DesiredAccess">アクセストークンの要求アクセスタイプを指定するアクセスマスクを指定します。これらの要求アクセスタイプをトークンの DACL（随意アクセス制御リスト）と比較して、どのアクセスが許可され、どのアクセスが拒否されるかを決定します。</param>
-        /// <param name="TokenHandle">この関数から制御が戻ったときに、新しく開かれたアクセストークンを識別するハンドルへのポインタを指定します。</param>
-        /// <returns>
-        /// 関数が成功すると、0 以外の値が返ります。
-        /// 関数が失敗すると、0 が返ります。拡張エラー情報を取得するには、GetLastError関数を使います。
-        /// </returns>
-        [DllImport(fileName, SetLastError = true)]
-        public static extern bool OpenProcessToken(IntPtr ProcessHandle, TOKEN DesiredAccess, out IntPtr TokenHandle);
     }
 }

@@ -1,14 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win32API
+namespace NativeMethods
 {
-    static class PowrProf
+    public static partial class PowrProf
     {
-        /// <summary>
-        /// powrprof.dllのファイル名
-        /// </summary>
-        const string fileName = "powrprof.dll";
-
         /// <summary>
         /// Suspends the system by shutting power down. Depending on the Hibernate parameter, the system either enters a suspend (sleep) state or hibernation (S4).
         /// </summary>
@@ -22,7 +17,7 @@ namespace Win32API
         /// If the function succeeds, the return value is nonzero.
         /// <para>If the function fails, the return value is zero. To get extended error information, call GetLastError.</para>
         /// </returns>
-        [DllImport(fileName, SetLastError = true)]
+        [DllImport(AssemblyName, SetLastError = true)]
         public static extern bool SetSuspendState(bool Hibernate, bool ForceCritical, bool DisableWakeEvent);
     }
 }

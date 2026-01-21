@@ -4,7 +4,7 @@
 /// winnt.h
 /// BUILD Version: 0073
 /// </summary>
-namespace Win32API.WinNT
+namespace NativeMethods
 {
     /// <summary>
     /// The LUID_AND_ATTRIBUTES structure represents a locally unique identifier (LUID) and its attributes.
