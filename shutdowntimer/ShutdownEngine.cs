@@ -31,27 +31,26 @@ namespace shutdowntimer
 
             switch (shutDownSwitch)
             {
+                case ShutDownSwitch.PowerOff:
+                    ewx |= EWX.POWEROFF;
+                    break;
 
-            case ShutDownSwitch.PowerOff:
-                ewx |= EWX.POWEROFF;
-                break;
+                case ShutDownSwitch.Reboot:
+                    ewx |= EWX.REBOOT;
+                    break;
 
-            case ShutDownSwitch.Reboot:
-                ewx |= EWX.REBOOT;
-                break;
+                case ShutDownSwitch.LogOff:
+                    ewx |= EWX.LOGOFF;
+                    break;
 
-            case ShutDownSwitch.LogOff:
-                ewx |= EWX.LOGOFF;
-                break;
+                case ShutDownSwitch.StandBy:
+                case ShutDownSwitch.Hibernate:
+                    bool hibernate = (shutDownSwitch == ShutDownSwitch.Hibernate);
+                    PowrProf.SetSuspendState(hibernate, true, true);
+                    return;
 
-            case ShutDownSwitch.StandBy:
-            case ShutDownSwitch.Hibernate:
-                bool hibernate = (shutDownSwitch == ShutDownSwitch.Hibernate);
-                PowrProf.SetSuspendState(hibernate, true, true);
-                return;
-
-            default:
-                throw new ArgumentException();
+                default:
+                    throw new ArgumentException();
             }
 
             User32.ExitWindowsEx(ewx, 0);
