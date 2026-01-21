@@ -4,26 +4,37 @@ namespace shutdowntimer
 {
     public partial class FormNotify : Form
     {
-        int remain = 10;
+        #region Private Fields
 
-        void setNotifyMessage()
-        {
-            labelNotify.Text = string.Format("This Operating System will be shutdown at {0} seconds later.", remain);
-        }
+        private int remain = 10;
+
+        #endregion
+
+        #region Public Methods
 
         public FormNotify()
         {
             InitializeComponent();
         }
 
+        #endregion
+
+        // Designer's Methods
+
         private void buttonCancel_Click(object sender, System.EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
 
+        private void SetNotifyMessage()
+        {
+            labelNotify.Text = $"This Operating System will be shutdown at {remain} seconds later.";
+        }
+
         private void shown(object sender, System.EventArgs e)
         {
-            setNotifyMessage();
+            remain = 10;
+            SetNotifyMessage();
         }
 
         private void timer_Tick(object sender, System.EventArgs e)
@@ -36,7 +47,7 @@ namespace shutdowntimer
                 DialogResult = DialogResult.OK;
             }
 
-            setNotifyMessage();
+            SetNotifyMessage();
         }
     }
 }

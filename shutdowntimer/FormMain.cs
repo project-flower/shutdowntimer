@@ -5,56 +5,60 @@ namespace shutdowntimer
 {
     public partial class FormMain : Form
     {
-        bool waitfor = true;
-        DateTime fireingTime = DateTime.MaxValue;
-        double remain = double.MaxValue;
+        #region Private Fields
 
-        System.Timers.Timer timer = new System.Timers.Timer()
+        private bool waitfor = true;
+        private DateTime fireingTime = DateTime.MaxValue;
+        private double remain = double.MaxValue;
+
+        private System.Timers.Timer timer = new System.Timers.Timer()
         {
             AutoReset = false,
         };
 
-        private void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            timer.Stop();
+        #endregion
 
-            if (fireingTime < DateTime.Now)
-            {
-                notifyShutDown();
-            }
-            else
-            {
-                setRemain();
-                timer.Start();
-            }
+        #region Public Methods
+
+        public FormMain()
+        {
+            InitializeComponent();
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            timer.SynchronizingObject = this;
+            timer.Elapsed += timer_Elapsed;
+            TurnAwait();
         }
 
-        void notifyShutDown()
+        #endregion
+
+        #region Private Methods
+
+        private void NotifyShutDown()
         {
             var formNotify = new FormNotify();
 
             if (formNotify.ShowDialog() != DialogResult.OK)
             {
-                turnAwait();
+                TurnAwait();
                 return;
             }
 
             try
             {
                 var shutDownSwitch = (ShutdownEngine.ShutDownSwitch)(comboBoxShutdownSwitch.SelectedItem);
-                ShutdownEngine.ShutDown(shutDownSwitch);
+                ShutdownEngine.DoShutdown(shutDownSwitch);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                turnAwait();
+                TurnAwait();
                 return;
             }
 
             Close();
         }
 
-        void setRemain()
+        private void SetRemain()
         {
             DateTime currentTime = DateTime.Now;
             remain = (fireingTime - currentTime).TotalMilliseconds;
@@ -63,7 +67,22 @@ namespace shutdowntimer
             timer.Interval = (remain > 0 ? remain : 1);
         }
 
-        void turnAwait()
+        private void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            timer.Stop();
+
+            if (fireingTime < DateTime.Now)
+            {
+                NotifyShutDown();
+            }
+            else
+            {
+                SetRemain();
+                timer.Start();
+            }
+        }
+
+        private void TurnAwait()
         {
             timer.Stop();
             waitfor = !waitfor;
@@ -73,7 +92,7 @@ namespace shutdowntimer
             if (waitfor)
             {
                 fireingTime = dateTimePicker.Value;
-                setRemain();
+                SetRemain();
                 buttonSet.Text = "Stop(&S)";
                 timer.Start();
                 return;
@@ -82,14 +101,9 @@ namespace shutdowntimer
             buttonSet.Text = "Set(&S)";
         }
 
-        public FormMain()
-        {
-            InitializeComponent();
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            timer.SynchronizingObject = this;
-            timer.Elapsed += timer_Elapsed;
-            turnAwait();
-        }
+        #endregion
+
+        // Designer's Methods
 
         private void buttonSet_Click(object sender, EventArgs e)
         {
@@ -99,16 +113,17 @@ namespace shutdowntimer
                 dateTimePicker.Value = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, 0);
             }
 
-            turnAwait();
+            TurnAwait();
         }
 
         private void load(object sender, EventArgs e)
         {
-            comboBoxShutdownSwitch.Items.Add(ShutdownEngine.ShutDownSwitch.PowerOff);
-            comboBoxShutdownSwitch.Items.Add(ShutdownEngine.ShutDownSwitch.Reboot);
-            comboBoxShutdownSwitch.Items.Add(ShutdownEngine.ShutDownSwitch.LogOff);
-            comboBoxShutdownSwitch.Items.Add(ShutdownEngine.ShutDownSwitch.Hibernate);
-            comboBoxShutdownSwitch.Items.Add(ShutdownEngine.ShutDownSwitch.StandBy);
+            ComboBox.ObjectCollection items = comboBoxShutdownSwitch.Items;
+            items.Add(ShutdownEngine.ShutDownSwitch.PowerOff);
+            items.Add(ShutdownEngine.ShutDownSwitch.Reboot);
+            items.Add(ShutdownEngine.ShutDownSwitch.Logoff);
+            items.Add(ShutdownEngine.ShutDownSwitch.Hibernate);
+            items.Add(ShutdownEngine.ShutDownSwitch.StandBy);
             comboBoxShutdownSwitch.SelectedIndex = 0;
         }
     }

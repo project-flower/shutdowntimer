@@ -5,29 +5,35 @@ namespace shutdowntimer
 {
     static class ShutdownEngine
     {
+        #region Public Classes
+
         public enum ShutDownSwitch
         {
             PowerOff,
             Reboot,
-            LogOff,
+            Logoff,
             StandBy,
             Hibernate
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// コンピューターを強制的にシャットダウン・再起動・ログオフ・スタンバイ・休止状態にします。
         /// </summary>
-        /// <param name="shutDownSwitch"></param>
-        public static void ShutDown(ShutDownSwitch shutDownSwitch)
+        /// <param name="shutdownSwitch"></param>
+        public static void DoShutdown(ShutDownSwitch shutdownSwitch)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                adjustToken();
+                AdjustToken();
             }
 
             EWX ewx = EWX.FORCE;
 
-            switch (shutDownSwitch)
+            switch (shutdownSwitch)
             {
                 case ShutDownSwitch.PowerOff:
                     ewx |= EWX.POWEROFF;
@@ -37,14 +43,13 @@ namespace shutdowntimer
                     ewx |= EWX.REBOOT;
                     break;
 
-                case ShutDownSwitch.LogOff:
+                case ShutDownSwitch.Logoff:
                     ewx |= EWX.LOGOFF;
                     break;
 
                 case ShutDownSwitch.StandBy:
                 case ShutDownSwitch.Hibernate:
-                    bool hibernate = (shutDownSwitch == ShutDownSwitch.Hibernate);
-                    PowrProf.SetSuspendState(hibernate, true, true);
+                    PowrProf.SetSuspendState((shutdownSwitch == ShutDownSwitch.Hibernate), true, true);
                     return;
 
                 default:
@@ -54,11 +59,14 @@ namespace shutdowntimer
             User32.ExitWindowsEx(ewx, 0);
         }
 
-        static void adjustToken()
+        #endregion
+
+        #region Private Methods
+
+        private static void AdjustToken()
         {
             IntPtr processhandle = Kernel32.GetCurrentProcess();
-            IntPtr tokenHandle;
-            AdvApi32.OpenProcessToken(processhandle, (TOKEN.ADJUST_PRIVILEGES | TOKEN.QUERY), out tokenHandle);
+            AdvApi32.OpenProcessToken(processhandle, (TOKEN.ADJUST_PRIVILEGES | TOKEN.QUERY), out IntPtr tokenHandle);
             var newState = new TOKEN_PRIVILEGES();
             newState.Privileges.Attributes = SE.PRIVILEGE_ENABLED;
             newState.PrivilegeCount = 1;
@@ -66,5 +74,7 @@ namespace shutdowntimer
             AdvApi32.AdjustTokenPrivileges(tokenHandle, false, ref newState, 0, IntPtr.Zero, IntPtr.Zero);
             Kernel32.CloseHandle(tokenHandle);
         }
+
+        #endregion
     }
 }
